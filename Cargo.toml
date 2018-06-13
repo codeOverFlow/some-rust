@@ -1,0 +1,6 @@
+[package]
+name = "some-rust"
+version = "0.1.0"
+authors = ["adrien Bodineau <adrien.bodineau@gmail.com>"]
+
+[dependencies]
