@@ -37,6 +37,26 @@ fn recuperation_de_la_saisie_utilisateur() -> Option<usize> {
     }
 }
 
+fn jeu(valeur_a_deviner: usize, mut nombre_de_coup: usize) {
+    while nombre_de_coup > 0 {
+        println!("{} coups restant", nombre_de_coup);
+        if let Some(valeur_saisie) = recuperation_de_la_saisie_utilisateur() {
+            match valeur_a_deviner.cmp(&valeur_saisie) {
+                Ordering::Greater => println!("Plus grand"),
+                Ordering::Equal => {
+                    println!("Gagné !");
+                    break;
+                }
+                Ordering::Less => println!("Plus petit"),
+            }
+        } else {
+            panic!("Erreur lors de la saisie utilisateur !")
+        }
+        nombre_de_coup -= 1;
+    }
+}
+
 fn main() {
-    println!("Hello, world!");
+    let valeur_a_deviner = creation_de_la_valeur_a_deviner(0, 10);
+    jeu(valeur_a_deviner, 10);
 }
