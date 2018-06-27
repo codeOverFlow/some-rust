@@ -1,44 +1,15 @@
 extern crate rand;
 
-use rand::prelude::*;
-use std::cmp::Ordering;
-use std::str::FromStr;
 mod recuperation;
 use recuperation::recuperation_de_la_saisie_utilisateur;
 
-fn creation_de_la_valeur_a_deviner(min: usize, max: usize) -> usize {
-    thread_rng().gen_range(min, max)
-}
+mod conversion;
+use conversion::conversion_de_la_saisie_utilisateur;
 
-fn conversion_de_la_saisie_utilisateur(saisie: Option<String>) -> Option<usize> {
-    if let Some(saisie_string) = saisie {
-        match usize::from_str(saisie_string.trim()) {
-            Ok(valeur) => Some(valeur),
-            Err(_) => None,
-        }
-    } else {
-        None
-    }
-}
+mod creation;
+use creation::creation_de_la_valeur_a_deviner;
 
-fn recuperation_de_la_saisie_utilisateur() -> Option<String> {
-    // Petit affichage
-    print!("Valeur: ");
-    match stdout().flush() {
-        Ok(_) => (),
-        Err(e) => eprintln!("Erreur durant le flush de stdout: {}", e),
-    }
-
-    // Récupération de la saisie
-    let mut saisie_utilisateur = String::new();
-    match stdin().read_line(&mut saisie_utilisateur) {
-        Ok(_) => Some(saisie_utilisateur),
-        Err(e) => {
-            eprintln!("Erreur de saisie utilisateur: {}", e);
-            None
-        }
-    }
-}
+use std::cmp::Ordering;
 
 fn jeu(valeur_a_deviner: usize, mut nombre_de_coup: isize) {
     while nombre_de_coup >= 0 {
@@ -67,8 +38,20 @@ fn jeu(valeur_a_deviner: usize, mut nombre_de_coup: isize) {
 
 fn main() {
     loop {
-        let valeur_a_deviner = creation_de_la_valeur_a_deviner(0, 10);
+        // Possibilité de changer la valeur max
+        let valeur_max =
+            match conversion_de_la_saisie_utilisateur(recuperation_de_la_saisie_utilisateur()) {
+                Some(valeur) => valeur,
+                None => 10,
+            };
+
+        // création de la valeur à deviner
+        let valeur_a_deviner = creation_de_la_valeur_a_deviner(0, valeur_max);
+
+        // lancement du jeu
         jeu(valeur_a_deviner, 10);
+
+        // Possibilité de rejouer
         if let Some(rejouer) = recuperation_de_la_saisie_utilisateur() {
             match rejouer.trim() {
                 "O" => (),
