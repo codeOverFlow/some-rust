@@ -2,10 +2,9 @@ extern crate rand;
 
 use rand::prelude::*;
 use std::cmp::Ordering;
-use std::io::stdin;
-use std::io::stdout;
-use std::io::Write;
 use std::str::FromStr;
+mod recuperation;
+use recuperation::recuperation_de_la_saisie_utilisateur;
 
 fn creation_de_la_valeur_a_deviner(min: usize, max: usize) -> usize {
     thread_rng().gen_range(min, max)
